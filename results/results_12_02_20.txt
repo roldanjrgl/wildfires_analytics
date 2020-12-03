@@ -1,0 +1,61 @@
+>>> dataset = spark.read.format("libsvm").option("numFeatures", "2").load("./small_sample.txt")
+Traceback (most recent call last):
+  File "/opt/cloudera/parcels/SPARK2-2.3.0.cloudera4-1.cdh5.13.3.p0.611179/lib/spark2/python/pyspark/context.py", line 254, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+>>> glr = GeneralizedLinearRegression(family="gaussian", link="identity", maxIter=10, regParam=0.3)
+>>> model = glr.fit(dataset)
+20/12/02 21:02:13 WARN regression.GeneralizedLinearRegression: When family is not tweedie, setting param variancePower will take no effect.
+20/12/02 21:02:15 WARN regression.GeneralizedLinearRegressionModel: When family is not tweedie, setting param variancePower will take no effect.
+>>> print("Coefficients: " + str(model.coefficients))
+Coefficients: [3.87395759417e-11,1.35283278475e-08]
+>>> print("Intercept: " + str(model.intercept))
+Intercept: 7.60957747568e-06
+>>>
+>>> # Summarize the model over the training set and print out some metrics
+... summary = model.summary
+>>> print("Coefficient Standard Errors: " + str(summary.coefficientStandardErrors))
+Coefficient Standard Errors: [2.8002500752527746e-10, 5.5050622212298366e-08, 1.650382070147539e-05]
+>>> print("T Values: " + str(summary.tValues))
+T Values: [0.13834327256715426, 0.24574341404130964, 0.46107974712777183]
+>>> print("P Values: " + str(summary.pValues))
+P Values: [0.8899691679772124, 0.8058809361749877, 0.644741537131202]
+>>> print("Dispersion: " + str(summary.dispersion))
+Dispersion: 1.16155965025e-05
+>>> print("Null Deviance: " + str(summary.nullDeviance))
+Null Deviance: 7.99990707452
+>>> print("Residual Degree Of Freedom Null: " + str(summary.residualDegreeOfFreedomNull))
+Residual Degree Of Freedom Null: 688723
+>>> print("Deviance: " + str(summary.deviance))
+Deviance: 7.99990523879
+>>> print("Residual Degree Of Freedom: " + str(summary.residualDegreeOfFreedom))
+Residual Degree Of Freedom: 688721
+>>> print("AIC: " + str(summary.aic))
+AIC: -5871563.22824
+>>> print("Deviance Residuals: ")
+Deviance Residuals:
+>>> summary.residuals().show()
++--------------------+
+|   devianceResiduals|
++--------------------+
+|-1.14655535969465...|
+|-1.15128546191713...|
+|-1.14364155596381...|
+|-1.13898505893561...|
+|-1.14124357621301...|
+|-1.14243675515202...|
+|-1.14592719094436...|
+|-1.15154935896225...|
+|-1.14897235557774...|
+|-1.15367862643462...|
+|-1.14730044906584...|
+|-1.13556376675993...|
+|-1.14174660308022...|
+|-1.13910456400100...|
+|-1.14302888304389...|
+|-1.14394008466291...|
+|-1.13640911109985...|
+|-1.13731174321929...|
+|-1.14337061289657...|
+|-1.14726394027871...|
++--------------------+
